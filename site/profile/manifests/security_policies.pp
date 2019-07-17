@@ -2,7 +2,8 @@ class profile::security_policies {
   resources { 'panos_security_policy_rule':
     purge => true,
   }
-  panos_security_policy_rule { 'lan-internet': 
+
+  panos_security_policy_rule { 'lan-internet':
     ensure => 'present',
     rule_type => 'universal',
     source_zones => ['LAN'],
@@ -28,31 +29,7 @@ class profile::security_policies {
     require => [ Panos_zone['Internet'], Panos_zone['LAN'] ]
   }
 
-  panos_security_policy_rule { 'blah': 
-    ensure => 'present',
-    source_zones => ['LAN'],
-    source_address => ['any'],
-    negate_source => false,
-    source_users => ['any'],
-    hip_profiles => ['any'],
-    destination_zones => ['any'],
-    destination_address => ['any'],
-    negate_destination => false,
-    applications => ['apple-siri'],
-    services => ['application-default'],
-    categories => ['any'],
-    action => 'allow',
-    icmp_unreachable => false,
-    log_start => false,
-    log_end => false,
-    profile_type => 'none',
-    qos_type => 'none',
-    disable_server_response_inspection => false,
-    disable => false,
-    insert_after => 'test',
-  }
-
-  panos_security_policy_rule { 'test': 
+  panos_security_policy_rule { 'hundo':
     ensure => 'present',
     source_zones => ['any'],
     source_address => ['any'],
@@ -74,5 +51,29 @@ class profile::security_policies {
     disable_server_response_inspection => false,
     disable => false,
     insert_after => 'lan-internet',
+  }
+
+  panos_security_policy_rule { 'siri':
+    ensure => 'present',
+    source_zones => ['LAN'],
+    source_address => ['any'],
+    negate_source => false,
+    source_users => ['any'],
+    hip_profiles => ['any'],
+    destination_zones => ['any'],
+    destination_address => ['any'],
+    negate_destination => false,
+    applications => ['apple-siri'],
+    services => ['application-default'],
+    categories => ['any'],
+    action => 'allow',
+    icmp_unreachable => false,
+    log_start => false,
+    log_end => false,
+    profile_type => 'none',
+    qos_type => 'none',
+    disable_server_response_inspection => false,
+    disable => false,
+    insert_after => 'hundo',
   }
 }

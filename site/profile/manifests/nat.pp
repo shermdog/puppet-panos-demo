@@ -8,6 +8,6 @@ class profile::nat {
     source => ['192.168.0.0/24'],
     destination => ['any'],
     source_translation_type => 'dynamic-ip-and-port',
-    sat_interface => 'ethernet1/1',
+    sat_interface => 'loopback.1',
   }
 }

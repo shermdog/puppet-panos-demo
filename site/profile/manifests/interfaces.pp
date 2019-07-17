@@ -10,56 +10,31 @@ class profile::interfaces {
   }
 
   panos_arbitrary_commands {
-    'devices/entry/network/interface/ethernet':
+    'devices/entry/network/interface/loopback':
       ensure  => 'present',
-      xml     => '<ethernet>
-                    <entry name="ethernet1/1">
-                      <layer3>
-                        <ipv6>
-                          <neighbor-discovery>
-                            <router-advertisement>
-                              <enable>no</enable>
-                            </router-advertisement>
-                          </neighbor-discovery>
-                        </ipv6>
-                        <ndp-proxy>
-                          <enabled>no</enabled>
-                        </ndp-proxy>
-                        <lldp>
+      xml     => '<loopback>
+                    <units>
+                      <entry name="loopback.1">
+                        <adjust-tcp-mss>
                           <enable>no</enable>
-                        </lldp>
-                        <interface-management-profile>ping</interface-management-profile>
-                        <dhcp-client/>
-                      </layer3>
-                    </entry>
-                    <entry name="ethernet1/2">
-                      <layer3>
-                        <ipv6>
-                          <neighbor-discovery>
-                            <router-advertisement>
-                              <enable>no</enable>
-                            </router-advertisement>
-                          </neighbor-discovery>
-                        </ipv6>
-                        <ndp-proxy>
-                          <enabled>no</enabled>
-                        </ndp-proxy>
-                        <ip>
-                          <entry name="192.168.0.1/24"/>
-                        </ip>
-                        <lldp>
+                        </adjust-tcp-mss>
+                        <comment>WAN</comment>
+                      </entry>
+                      <entry name="loopback.2">
+                        <adjust-tcp-mss>
                           <enable>no</enable>
-                        </lldp>
+                        </adjust-tcp-mss>
+                        <comment>LAN</comment>
                         <interface-management-profile>ping</interface-management-profile>
-                      </layer3>
-                    </entry>
-                  </ethernet>',
+                      </entry>
+                    </units>
+                  </loopback>',
       require => Panos_arbitrary_commands['devices/entry/network/profiles/interface-management-profile']
   }
 
   panos_virtual_router { 'default': 
     ensure => 'present',
-    interfaces => ['ethernet1/1', 'ethernet1/2'],
+    interfaces => ['loopback.1', 'loopback.2'],
     ad_static => '10',
     ad_static_ipv6 => '10',
     ad_ospf_int => '30',
@@ -69,6 +44,6 @@ class profile::interfaces {
     ad_ibgp => '200',
     ad_ebgp => '20',
     ad_rip => '120',
-    require => Panos_arbitrary_commands['devices/entry/network/interface/ethernet']
+    require => Panos_arbitrary_commands['devices/entry/network/interface/loopback']
   }
 }
